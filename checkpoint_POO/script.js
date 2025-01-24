@@ -1,35 +1,93 @@
-/*
-Instructions
-
-Créez une classe d'objet pour le produit afin de stocker les propriétés pour l'id, le nom et le prix du produit.
-Créez une classe d'objet pour l'élément du panier d'achat afin de stocker les propriétés pour le produit et sa quantité.
-Ajoutez à la classe d'objet précédente la méthode pour calculer le prix total de l'élément.
-Créez une autre classe d'objet pour le panier d'achat qui contient un tableau d'instances de ShoppingCartItem.
-Ajoutez les méthodes suivantes à l'objet panier d'achat.
-Ajoutez les méthodes pour :
-Obtenir le total des éléments à l'intérieur du panier
-Ajouter des éléments
-Supprimer des éléments
-Afficher les éléments du panier
-Passez à tester la capacité de nos objets à :
-Créer des produits
-Créer un panier d'achat
-Ajouter des éléments au panier
-Afficher le panier
-Supprimer un élément du panier
-*/
-
-class Produit {
-    constructor(id, nom, prix){
-        this.id = id
-        this.nom = nom
-        this.prix = prix
+// Classe pour représenter un produit
+class Product {
+    constructor(id, name, price) {
+      this.id = id;
+      this.name = name;
+      this.price = price;
     }
-}
-
-class Panier extends Produit{
-    constructor(id, nom, prix, quantite){
-        super()
-        this.quantite = quantite
+  }
+  
+  // Classe pour représenter un élément dans le panier d'achat
+  class ShoppingCartItem {
+    constructor(product, quantity) {
+      this.product = product;
+      this.quantity = quantity;
     }
-}
+  
+    // Méthode pour calculer le prix total de l'élément
+    getTotalPrice() {
+      return this.product.price * this.quantity;
+    }
+  }
+  
+  // Classe pour représenter le panier d'achat
+  class ShoppingCart {
+    constructor() {
+      this.items = [];
+    }
+  
+    // Méthode pour obtenir le total des éléments dans le panier
+    getTotal() {
+      return this.items.reduce((total, item) => total + item.getTotalPrice(), 0);
+    }
+  
+    // Méthode pour ajouter un élément au panier
+    addItem(product, quantity) {
+      const existingItem = this.items.find(item => item.product.id === product.id);
+      if (existingItem) {
+        existingItem.quantity += quantity; // Augmente la quantité si le produit existe déjà
+      } else {
+        this.items.push(new ShoppingCartItem(product, quantity));
+      }
+    }
+  
+    // Méthode pour supprimer un élément du panier
+    removeItem(productId) {
+      this.items = this.items.filter(item => item.product.id !== productId);
+    }
+  
+    // Méthode pour afficher les éléments du panier
+    displayItems() {
+      if (this.items.length === 0) {
+        console.log("Le panier est vide.");
+      } else {
+        this.items.forEach(item => {
+          console.log(
+            `${item.product.name} - Quantité : ${item.quantity}, Prix total : ${item.getTotalPrice()} fcfa`
+          );
+        });
+      }
+    }
+  }
+  
+  // Test des classes et méthodes
+  // Créer des produits
+  const product1 = new Product(1, "huile", 1500);
+  const product2 = new Product(2, "Biscuit", 2000);
+  const product3 = new Product(3, "Bonbons", 1000);
+  
+  // Créer un panier d'achat
+  const cart = new ShoppingCart();
+  
+  // Ajouter des éléments au panier
+  cart.addItem(product1, 2);
+  cart.addItem(product2, 6);
+  cart.addItem(product3, 3);
+  
+  // Afficher les éléments du panier
+  console.log("Contenu du panier est:");
+  cart.displayItems();
+  
+  // Afficher le total
+  console.log(`Total du panier : ${cart.getTotal()}`);
+  
+  // Supprimer un élément du panier
+  cart.removeItem(2);
+  
+  // Afficher le panier après suppression
+  console.log("Panier après suppression :");
+  cart.displayItems();
+  
+  // Afficher le nouveau total
+  console.log(`Nouveau total : ${cart.getTotal()}`);
+  
